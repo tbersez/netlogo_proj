@@ -1,6 +1,6 @@
 ; Melisa Saichi & Thomas Bersez
 ; M2 GENIOHME, fall semester 2018
-
+;-----------------------------------------------------------------------
 ; Model variable parameters
 globals [
   act-pr   ; autonomous activator production rate
@@ -16,15 +16,31 @@ patches-own [
   act      ; activator concentration
   inh      ; inhibitor concentration
 ]
+;----------------------------------------------------------------------
+; Procedures
+to show-concentration
+  ask patches [
+    set pcolor scale-color
+    green act
+    0.5   ; residual
+    100   ; maximum
+  ]
+end
+to setup
+  clear-all
+  random-seed 137 ; to allow reproducibility, random seed is manualy fixed
+  ask patches [ set act random-float 100.0
+    set inh random-float 100.0 ] ; random concentrations are set
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
 10
-647
-448
+619
+420
 -1
 -1
-13.0
+1.0
 1
 10
 1
@@ -34,15 +50,32 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
+-200
+200
+-200
+200
 0
 0
 1
 ticks
 30.0
+
+BUTTON
+103
+123
+167
+156
+Setup
+setup\nshow-concentration\n
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
