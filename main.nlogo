@@ -1,7 +1,7 @@
 ; Melisa Saichi & Thomas Bersez
 ; M2 GENIOHME, fall semester 2018
 ;-----------------------------------------------------------------------
-; Model variable parameters
+; Model variable parameters (set with sliders) !!!!TO REWRITE!!!!
 ;globals [
 ;  act-pr   ; autonomous activator production rate
 ;  inh-pr   ; autonomous inhibitor production rate
@@ -13,34 +13,67 @@
 ;  ]
 ; Patches attributes
 patches-own [
-  act      ; activator concentration
-  inh      ; inhibitor concentration
+  act-c     ; activator concentration
+  inh-c     ; inhibitor concentration
+  act-n     ; activator concentration
+  inh-n     ; activator concentration
 ]
 ;----------------------------------------------------------------------
 ; Procedures
 to show-concentration
   ask patches [
     set pcolor scale-color
-    green act
+    green act-c
     0.5   ; residual
-    100   ; maximum
+    100  ; maximum
   ]
 end
+
 to setup
   clear-all
   random-seed 137 ; to allow reproducibility, random seed is manualy fixed
-  ask patches [ set act random-float 100.0
-    set inh random-float 100.0 ] ; random concentrations are set
+  ask patches [ set act-c random-float 100.0
+    set inh-c random-float 100.0 ] ; random concentrations are set
 end
+
+to copy-concentration
+  ask patches [
+    set act-n ( act-c )
+    set inh-n ( inh-c )
+  ]
+end
+
+to production-decay ; autonomous syntesis and decay for act & inh
+  ask patches [
+    set act-n ( act-c + ActivatorProduction - ActivatorDecayRate * act-c )
+    set inh-n ( inh-c + InhibitorProduction - InhibitorDecayRate * inh-c )
+  ]
+end
+
+to act-inh-dependent-production
+    ask patches [
+    set act-n ( act-n + InteractionRate *( act-c * act-c / inh-c ) )
+    set inh-n ( inh-n + InteractionRate * ( act-c * act-c ) )
+  ]
+end
+
+to next-turn
+    ask patches [
+    set act-c ( act-n )
+    set inh-c ( inh-n )
+  ]
+  show-concentration
+end
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 95
 12
-504
-422
+505
+423
 -1
 -1
-1.0
+2.0
 1
 10
 1
@@ -50,10 +83,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--200
-200
--200
-200
+-100
+100
+-100
+100
 0
 0
 1
@@ -86,7 +119,7 @@ ActivatorDecayRate
 ActivatorDecayRate
 0
 1
-0.8
+0.4
 0.05
 1
 NIL
@@ -163,6 +196,68 @@ InhibitorDiffusionRate
 1
 0.5
 0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+510
+289
+682
+322
+ActivatorProduction
+ActivatorProduction
+0
+100
+8.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+511
+328
+683
+361
+InhibitorProduction
+InhibitorProduction
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
+
+BUTTON
+321
+437
+524
+470
+test
+production-decay\nact-inh-dependent-production\nnext-turn
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+SLIDER
+731
+12
+903
+45
+InteractionRate
+InteractionRate
+0
+3
+3.0
+0.1
 1
 NIL
 HORIZONTAL
