@@ -2,15 +2,15 @@
 ; M2 GENIOHME, fall semester 2018
 ;-----------------------------------------------------------------------
 ; Model variable parameters
-globals [
-  act-pr   ; autonomous activator production rate
-  inh-pr   ; autonomous inhibitor production rate
-  gpr      ; activator dependent activator/inhibitor production rate
-  act-dc   ; activator decay rate
-  inh-dc   ; inhibitor decay rate
-  act-df   ; activator diffusion rate
-  inh-df   ; inhibitor diffusion rate
-  ]
+;globals [
+;  act-pr   ; autonomous activator production rate
+;  inh-pr   ; autonomous inhibitor production rate
+;  gpr      ; activator dependent activator/inhibitor production rate
+;  act-dc   ; activator decay rate
+;  inh-dc   ; inhibitor decay rate
+;  act-df   ; activator diffusion rate
+;  inh-df   ; inhibitor diffusion rate
+;  ]
 ; Patches attributes
 patches-own [
   act      ; activator concentration
@@ -34,10 +34,10 @@ to setup
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-619
-420
+95
+12
+504
+422
 -1
 -1
 1.0
@@ -61,10 +61,10 @@ ticks
 30.0
 
 BUTTON
-103
-123
-167
-156
+9
+12
+73
+45
 Setup
 setup\nshow-concentration\n
 NIL
@@ -76,6 +76,96 @@ NIL
 NIL
 NIL
 1
+
+SLIDER
+510
+102
+682
+135
+ActivatorDecayRate
+ActivatorDecayRate
+0
+1
+0.8
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+510
+142
+682
+175
+InhibitorDecayRate
+InhibitorDecayRate
+0
+1
+0.5
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+508
+12
+694
+45
+ActivatorProductionRate
+ActivatorProductionRate
+0
+100
+51.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+509
+50
+690
+83
+InhibitorProductionRate
+InhibitorProductionRate
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+509
+198
+689
+231
+ActivatorDiffusionRate
+ActivatorDiffusionRate
+0
+1
+0.5
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+509
+238
+684
+271
+InhibitorDiffusionRate
+InhibitorDiffusionRate
+0
+1
+0.5
+0.05
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
