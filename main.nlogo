@@ -1,8 +1,21 @@
 ; Melisa Saichi & Thomas Bersez
 ; M2 GENIOHME, fall semester 2018
 
-; patches attributes
-patches-own [ act inh ] ; act = activator concentration, inh = inhibitor concentration
+; Model variable parameters
+globals [
+  act-pr   ; autonomous activator production rate
+  inh-pr   ; autonomous inhibitor production rate
+  gpr      ; activator dependent activator/inhibitor production rate
+  act-dc   ; activator decay rate
+  inh-dc   ; inhibitor decay rate
+  act-df   ; activator diffusion rate
+  inh-df   ; inhibitor diffusion rate
+  ]
+; Patches attributes
+patches-own [
+  act      ; activator concentration
+  inh      ; inhibitor concentration
+]
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
