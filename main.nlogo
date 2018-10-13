@@ -24,8 +24,8 @@ to show-concentration
   ask patches [
     set pcolor scale-color
     green act-c
-    0.5   ; residual
-    100  ; maximum
+    100   ; residual
+    0.5  ; maximum
   ]
 end
 
@@ -64,7 +64,6 @@ to next-turn
   ]
   show-concentration
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 95
@@ -149,7 +148,7 @@ ActivatorProductionRate
 ActivatorProductionRate
 0
 100
-51.0
+27.0
 1
 1
 NIL
