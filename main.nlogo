@@ -69,8 +69,8 @@ to diffusion-gain
     let ACT ( act-c )
     let INH ( inh-c )
     ask neighbors [
-      set act-n ( act-n + ActivatorDiffusionRate * ACT)
-      set inh-n ( inh-n + InhibitorDiffusionRate * INH)
+      set act-n ( act-n + ( ActivatorDiffusionRate * ACT) / 8 )
+      set inh-n ( inh-n + ( InhibitorDiffusionRate * INH ) / 8 )
     ]
   ]
 end
@@ -84,13 +84,13 @@ to next-turn
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-95
-12
-505
+86
+10
+498
 423
 -1
 -1
-2.0
+4.0
 1
 10
 1
@@ -100,10 +100,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--100
-100
--100
-100
+-50
+50
+-50
+50
 0
 0
 1
@@ -136,7 +136,7 @@ ActivatorDecayRate
 ActivatorDecayRate
 0
 1
-0.4
+0.5
 0.05
 1
 NIL
@@ -151,7 +151,7 @@ InhibitorDecayRate
 InhibitorDecayRate
 0
 1
-0.5
+0.35
 0.05
 1
 NIL
@@ -166,7 +166,7 @@ ActivatorProductionRate
 ActivatorProductionRate
 0
 100
-27.0
+22.0
 1
 1
 NIL
@@ -181,7 +181,7 @@ InhibitorProductionRate
 InhibitorProductionRate
 0
 100
-50.0
+72.0
 1
 1
 NIL
@@ -196,7 +196,7 @@ ActivatorDiffusionRate
 ActivatorDiffusionRate
 0
 1
-0.5
+0.15
 0.05
 1
 NIL
@@ -211,7 +211,7 @@ InhibitorDiffusionRate
 InhibitorDiffusionRate
 0
 1
-0.5
+0.8
 0.05
 1
 NIL
@@ -226,7 +226,7 @@ ActivatorProduction
 ActivatorProduction
 0
 100
-8.0
+21.0
 1
 1
 NIL
@@ -241,18 +241,18 @@ InhibitorProduction
 InhibitorProduction
 0
 100
-50.0
+85.0
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-321
-437
-524
-470
-test
+191
+439
+394
+472
+Start
 copy-concentration\nproduction-decay\nact-inh-dependent-production\ndiffusion-loss\ndiffusion-gain\nnext-turn
 T
 1
@@ -265,36 +265,19 @@ NIL
 1
 
 SLIDER
-731
-12
-903
-45
+511
+385
+683
+418
 InteractionRate
 InteractionRate
 0
 3
-3.0
+0.8
 0.1
 1
 NIL
 HORIZONTAL
-
-BUTTON
-808
-306
-914
-339
-NIL
-diffusion-gain
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
 
 @#$#@#$#@
 ## WHAT IS IT?
