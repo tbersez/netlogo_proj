@@ -24,16 +24,16 @@ to show-concentration
   ask patches [
     set pcolor scale-color
     green act-c
-    0.5   ; residual
-    100  ; maximum
+    120  ; residual
+    2  ; maximum
   ]
 end
 
 to setup
   clear-all
   ;random-seed 137 ; to allow reproducibility, random seed is manualy fixed
-  ask patches [ set act-c random-float 1000.0
-    set inh-c random-float 1000.0 ] ; random concentrations are set
+  ask patches [ set act-c random-float 50.0
+    set inh-c random-float 50.0 ] ; random concentrations are set
 end
 
 to copy-concentration
@@ -52,8 +52,14 @@ end
 
 to act-inh-dependent-production
     ask patches [
-    set act-n ( act-n + ( InteractionRate * ( ( act-c * act-c ) / inh-c ) ) )
-    set inh-n ( inh-n + ( InteractionRate * ( act-c * act-c ) ) )
+    if act-c < 100
+    [
+      ifelse inh-c > 0
+      [ set act-n ( act-n + ( InteractionRate * ( ( act-c * act-c ) / inh-c ) ) ) ]
+      [ set act-n ( act-n + ( InteractionRate * ( ( act-c * act-c ) ) ) ) ]
+    ]
+    if inh-c < 100
+    [ set inh-n ( inh-n + ( InteractionRate * ( act-c * act-c ) ) ) ]
   ]
 end
 
@@ -90,11 +96,11 @@ end
 GRAPHICS-WINDOW
 86
 10
-498
-423
+496
+421
 -1
 -1
-4.0
+2.0
 1
 10
 1
@@ -104,10 +110,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--50
-50
--50
-50
+-100
+100
+-100
+100
 0
 0
 1
@@ -131,126 +137,6 @@ NIL
 NIL
 1
 
-SLIDER
-510
-102
-682
-135
-ActivatorDecayRate
-ActivatorDecayRate
-0
-1
-0.4
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-510
-142
-682
-175
-InhibitorDecayRate
-InhibitorDecayRate
-0
-1
-0.7
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-508
-12
-694
-45
-ActivatorProductionRate
-ActivatorProductionRate
-0
-100
-48.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-509
-50
-690
-83
-InhibitorProductionRate
-InhibitorProductionRate
-0
-100
-59.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-509
-198
-689
-231
-ActivatorDiffusionRate
-ActivatorDiffusionRate
-0
-1
-0.6
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-509
-238
-684
-271
-InhibitorDiffusionRate
-InhibitorDiffusionRate
-0
-1
-0.4
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-510
-289
-682
-322
-ActivatorProduction
-ActivatorProduction
-0
-100
-9.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-511
-328
-683
-361
-InhibitorProduction
-InhibitorProduction
-0
-100
-9.0
-1
-1
-NIL
-HORIZONTAL
-
 BUTTON
 191
 439
@@ -269,19 +155,107 @@ NIL
 1
 
 SLIDER
-511
-385
-683
-418
+587
+300
+759
+333
 InteractionRate
 InteractionRate
 0
 3
-0.3
+1.5
 0.1
 1
 NIL
 HORIZONTAL
+
+INPUTBOX
+507
+10
+662
+70
+ActivatorProductionRate
+0.4
+1
+0
+Number
+
+INPUTBOX
+669
+10
+824
+70
+InhibitorProductionRate
+0.5
+1
+0
+Number
+
+INPUTBOX
+507
+78
+662
+138
+ActivatorDecayRate
+0.9
+1
+0
+Number
+
+INPUTBOX
+670
+78
+825
+138
+InhibitorDecayRate
+0.9
+1
+0
+Number
+
+INPUTBOX
+507
+146
+662
+206
+ActivatorDiffusionRate
+0.05
+1
+0
+Number
+
+INPUTBOX
+670
+146
+825
+206
+InhibitorDiffusionRate
+0.4
+1
+0
+Number
+
+INPUTBOX
+508
+214
+663
+274
+ActivatorProduction
+40.0
+1
+0
+Number
+
+INPUTBOX
+670
+214
+827
+274
+InhibitorProduction
+10.0
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
