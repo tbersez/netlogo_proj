@@ -57,6 +57,24 @@ to act-inh-dependent-production
   ]
 end
 
+to diffusion-loss
+    ask patches [
+      set act-n ( act-n - ActivatorDiffusionRate * act-n )
+      set inh-n ( inh-n - InhibitorDiffusionRate * act-n )
+  ]
+end
+
+to diffusion-gain
+  ask patches [
+    let ACT ( act-c )
+    let INH ( inh-c )
+    ask neighbors [
+      set act-n ( act-n + ActivatorDiffusionRate * ACT)
+      set inh-n ( inh-n + InhibitorDiffusionRate * INH)
+    ]
+  ]
+end
+
 to next-turn
     ask patches [
     set act-c ( act-n )
@@ -235,7 +253,7 @@ BUTTON
 524
 470
 test
-production-decay\nact-inh-dependent-production\nnext-turn
+copy-concentration\nproduction-decay\nact-inh-dependent-production\ndiffusion-loss\ndiffusion-gain\nnext-turn
 T
 1
 T
@@ -260,6 +278,23 @@ InteractionRate
 1
 NIL
 HORIZONTAL
+
+BUTTON
+808
+306
+914
+339
+NIL
+diffusion-gain
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
