@@ -24,16 +24,16 @@ to show-concentration
   ask patches [
     set pcolor scale-color
     green act-c
-    100   ; residual
-    0.5  ; maximum
+    0.5   ; residual
+    100  ; maximum
   ]
 end
 
 to setup
   clear-all
-  random-seed 137 ; to allow reproducibility, random seed is manualy fixed
-  ask patches [ set act-c random-float 100.0
-    set inh-c random-float 100.0 ] ; random concentrations are set
+  ;random-seed 137 ; to allow reproducibility, random seed is manualy fixed
+  ask patches [ set act-c random-float 1000.0
+    set inh-c random-float 1000.0 ] ; random concentrations are set
 end
 
 to copy-concentration
@@ -45,22 +45,22 @@ end
 
 to production-decay ; autonomous syntesis and decay for act & inh
   ask patches [
-    set act-n ( act-c + ActivatorProduction - ActivatorDecayRate * act-c )
-    set inh-n ( inh-c + InhibitorProduction - InhibitorDecayRate * inh-c )
+    set act-n ( act-c + ActivatorProduction - ( ActivatorDecayRate * act-c ) )
+    set inh-n ( inh-c + InhibitorProduction - ( InhibitorDecayRate * inh-c ) )
   ]
 end
 
 to act-inh-dependent-production
     ask patches [
-    set act-n ( act-n + InteractionRate *( act-c * act-c / inh-c ) )
-    set inh-n ( inh-n + InteractionRate * ( act-c * act-c ) )
+    set act-n ( act-n + ( InteractionRate * ( ( act-c * act-c ) / inh-c ) ) )
+    set inh-n ( inh-n + ( InteractionRate * ( act-c * act-c ) ) )
   ]
 end
 
 to diffusion-loss
     ask patches [
-      set act-n ( act-n - ActivatorDiffusionRate * act-n )
-      set inh-n ( inh-n - InhibitorDiffusionRate * act-n )
+      set act-n ( act-n - ( ActivatorDiffusionRate * act-n ) )
+      set inh-n ( inh-n - ( InhibitorDiffusionRate * act-n ) )
   ]
 end
 
@@ -69,16 +69,20 @@ to diffusion-gain
     let ACT ( act-c )
     let INH ( inh-c )
     ask neighbors [
-      set act-n ( act-n + ( ActivatorDiffusionRate * ACT) / 8 )
-      set inh-n ( inh-n + ( InhibitorDiffusionRate * INH ) / 8 )
+      set act-n ( act-n + ( ( ActivatorDiffusionRate * ACT ) / 8 ) )
+      set inh-n ( inh-n + ( ( InhibitorDiffusionRate * INH ) / 8 ) )
     ]
   ]
 end
 
 to next-turn
     ask patches [
-    set act-c ( act-n )
-    set inh-c ( inh-n )
+    ifelse act-n < 0
+    [ set act-c ( 1 ) ]
+    [ set act-c ( act-n ) ]
+    ifelse inh-n < 0
+    [ set inh-c ( 1 ) ]
+    [ set inh-c ( inh-n ) ]
   ]
   show-concentration
 end
@@ -136,7 +140,7 @@ ActivatorDecayRate
 ActivatorDecayRate
 0
 1
-0.5
+0.4
 0.05
 1
 NIL
@@ -151,7 +155,7 @@ InhibitorDecayRate
 InhibitorDecayRate
 0
 1
-0.35
+0.7
 0.05
 1
 NIL
@@ -166,7 +170,7 @@ ActivatorProductionRate
 ActivatorProductionRate
 0
 100
-22.0
+48.0
 1
 1
 NIL
@@ -181,7 +185,7 @@ InhibitorProductionRate
 InhibitorProductionRate
 0
 100
-72.0
+59.0
 1
 1
 NIL
@@ -196,7 +200,7 @@ ActivatorDiffusionRate
 ActivatorDiffusionRate
 0
 1
-0.15
+0.6
 0.05
 1
 NIL
@@ -211,7 +215,7 @@ InhibitorDiffusionRate
 InhibitorDiffusionRate
 0
 1
-0.8
+0.4
 0.05
 1
 NIL
@@ -226,7 +230,7 @@ ActivatorProduction
 ActivatorProduction
 0
 100
-21.0
+9.0
 1
 1
 NIL
@@ -241,7 +245,7 @@ InhibitorProduction
 InhibitorProduction
 0
 100
-85.0
+9.0
 1
 1
 NIL
@@ -273,7 +277,7 @@ InteractionRate
 InteractionRate
 0
 3
-0.8
+0.3
 0.1
 1
 NIL
