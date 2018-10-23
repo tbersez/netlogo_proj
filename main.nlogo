@@ -1,17 +1,6 @@
 ; Melisa Saichi & Thomas Bersez
 ; M2 GENIOHME, fall semester 2018
 ;-----------------------------------------------------------------------
-; Model variable parameters (set with sliders) !!!!TO REWRITE!!!!
-;globals [
-;  act-pr   ; autonomous activator production rate
-;  inh-pr   ; autonomous inhibitor production rate
-;  gpr      ; activator dependent activator/inhibitor production rate
-;  act-dc   ; activator decay rate
-;  inh-dc   ; inhibitor decay rate
-;  act-df   ; activator diffusion rate
-;  inh-df   ; inhibitor diffusion rate
-;  ]
-; Patches attributes
 patches-own [
   act-c     ; activator concentration
   inh-c     ; inhibitor concentration
@@ -24,14 +13,14 @@ to show-concentration
   ask patches [
     set pcolor scale-color
     green act-c
-    120  ; residual
+    80 ; residual
     2  ; maximum
   ]
 end
 
 to setup
   clear-all
-  ;random-seed 137 ; to allow reproducibility, random seed is manualy fixed
+  random-seed 137 ; to allow reproducibility, random seed is manualy fixed
   ask patches [ set act-c random-float 50.0
     set inh-c random-float 50.0 ] ; random concentrations are set
 end
@@ -65,7 +54,8 @@ end
 
 to diffusion-loss
     ask patches [
-      set act-n ( act-n - ( ActivatorDiffusionRate * act-n ) )
+    let diff ( 20 * pxcor )
+      set act-n ( act-n - abs ( cos diff * act-n ) )
       set inh-n ( inh-n - ( InhibitorDiffusionRate * act-n ) )
   ]
 end
@@ -75,7 +65,8 @@ to diffusion-gain
     let ACT ( act-c )
     let INH ( inh-c )
     ask neighbors [
-      set act-n ( act-n + ( ( ActivatorDiffusionRate * ACT ) / 8 ) )
+      let diff ( 20 * pxcor )
+      set act-n ( act-n + ( abs ( cos diff * ACT ) / 8 ) )
       set inh-n ( inh-n + ( ( InhibitorDiffusionRate * INH ) / 8 ) )
     ]
   ]
@@ -94,13 +85,13 @@ to next-turn
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-86
+91
 10
-496
-421
+503
+423
 -1
 -1
-2.0
+4.0
 1
 10
 1
@@ -110,10 +101,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--100
-100
--100
-100
+-50
+50
+-50
+50
 0
 0
 1
@@ -197,7 +188,7 @@ INPUTBOX
 662
 138
 ActivatorDecayRate
-0.9
+0.99
 1
 0
 Number
@@ -208,7 +199,7 @@ INPUTBOX
 825
 138
 InhibitorDecayRate
-0.9
+0.7
 1
 0
 Number
@@ -219,7 +210,7 @@ INPUTBOX
 662
 206
 ActivatorDiffusionRate
-0.05
+0.01
 1
 0
 Number
@@ -230,7 +221,7 @@ INPUTBOX
 825
 206
 InhibitorDiffusionRate
-0.4
+0.2
 1
 0
 Number
@@ -241,7 +232,7 @@ INPUTBOX
 663
 274
 ActivatorProduction
-40.0
+50.0
 1
 0
 Number
@@ -252,7 +243,7 @@ INPUTBOX
 827
 274
 InhibitorProduction
-10.0
+20.0
 1
 0
 Number
