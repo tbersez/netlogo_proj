@@ -55,7 +55,7 @@ end
 to diffusion-loss
     ask patches [
     let diff ( 20 * pxcor )
-      set act-n ( act-n - abs ( cos diff * act-n ) )
+      set act-n ( act-n - abs ( cos ( diff ) * act-n ) )
       set inh-n ( inh-n - ( InhibitorDiffusionRate * act-n ) )
   ]
 end
@@ -66,7 +66,7 @@ to diffusion-gain
     let INH ( inh-c )
     ask neighbors [
       let diff ( 20 * pxcor )
-      set act-n ( act-n + ( abs ( cos diff * ACT ) / 8 ) )
+      set act-n ( act-n + ( abs ( cos ( diff ) * ACT ) / 8 ) )
       set inh-n ( inh-n + ( ( InhibitorDiffusionRate * INH ) / 8 ) )
     ]
   ]
