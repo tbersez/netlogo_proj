@@ -13,8 +13,8 @@ to show-concentration
   ask patches [
     set pcolor scale-color
     green act-c
-    80 ; residual
-    2  ; maximum
+    2 ; residual
+    80 ; maximum
   ]
 end
 
@@ -52,22 +52,41 @@ to act-inh-dependent-production
   ]
 end
 
-to diffusion-loss
+to diffusion
     ask patches [
-    let diff ( 20 * pxcor )
-      set act-n ( act-n - abs ( cos ( diff ) * act-n ) )
-      set inh-n ( inh-n - ( InhibitorDiffusionRate * act-n ) )
-  ]
-end
 
-to diffusion-gain
-  ask patches [
     let ACT ( act-c )
     let INH ( inh-c )
-    ask neighbors [
-      let diff ( 20 * pxcor )
-      set act-n ( act-n + ( abs ( cos ( diff ) * ACT ) / 8 ) )
-      set inh-n ( inh-n + ( ( InhibitorDiffusionRate * INH ) / 8 ) )
+
+    ; define activator diffusion coefficient according to mode
+
+    if Mode = "OneDim"
+    [ let onedim ( abs  ( cos ( Multact * pxcor ) ) )
+    set act-n ( act-n - ( onedim * act-n ) )
+    set inh-n ( inh-n - ( InhibitorDiffusionRate * act-n ) )
+      ask neighbors [
+        set act-n ( act-n + ( ( onedim * ACT ) / 8  ) )
+        set inh-n ( inh-n + ( ( InhibitorDiffusionRate * INH ) / 8 ) )
+      ]
+    ]
+
+    if Mode = "TwoDim"
+    [ let twodim ( abs ( 0.5 * ( cos ( Multact * pxcor ) + cos ( Multact * pycor) ) ) )
+      set act-n ( act-n - ( twodim * act-n ) )
+      set inh-n ( inh-n - ( InhibitorDiffusionRate * act-n ) )
+        ask neighbors [
+        set act-n ( act-n + ( ( twodim * ACT ) / 8  ) )
+        set inh-n ( inh-n + ( ( InhibitorDiffusionRate * INH ) / 8 ) )
+      ]
+    ]
+
+    if Mode = "Homogenous"
+    [ set act-n ( act-n - ( ActivatorDiffusionRate * act-n ) )
+    set inh-n ( inh-n - ( InhibitorDiffusionRate * act-n ) )
+        ask neighbors [
+        set act-n ( act-n + ( ( ActivatorDiffusionRate * ACT ) / 8  ) )
+        set inh-n ( inh-n + ( ( InhibitorDiffusionRate * INH ) / 8 ) )
+      ]
     ]
   ]
 end
@@ -75,10 +94,10 @@ end
 to next-turn
     ask patches [
     ifelse act-n < 0
-    [ set act-c ( 1 ) ]
+    [ set act-c ( 0 ) ]
     [ set act-c ( act-n ) ]
     ifelse inh-n < 0
-    [ set inh-c ( 1 ) ]
+    [ set inh-c ( 0 ) ]
     [ set inh-c ( inh-n ) ]
   ]
   show-concentration
@@ -87,11 +106,11 @@ end
 GRAPHICS-WINDOW
 91
 10
-503
-423
+500
+420
 -1
 -1
-4.0
+1.0
 1
 10
 1
@@ -101,10 +120,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--50
-50
--50
-50
+-200
+200
+-200
+200
 0
 0
 1
@@ -134,7 +153,7 @@ BUTTON
 394
 472
 Start
-copy-concentration\nproduction-decay\nact-inh-dependent-production\ndiffusion-loss\ndiffusion-gain\nnext-turn
+copy-concentration\nproduction-decay\nact-inh-dependent-production\ndiffusion\nnext-turn
 T
 1
 T
@@ -146,15 +165,15 @@ NIL
 1
 
 SLIDER
-587
-300
-759
-333
+510
+294
+682
+327
 InteractionRate
 InteractionRate
 0
 3
-1.5
+0.8
 0.1
 1
 NIL
@@ -166,7 +185,7 @@ INPUTBOX
 662
 70
 ActivatorProductionRate
-0.4
+1.0
 1
 0
 Number
@@ -188,7 +207,7 @@ INPUTBOX
 662
 138
 ActivatorDecayRate
-0.99
+0.3
 1
 0
 Number
@@ -199,7 +218,7 @@ INPUTBOX
 825
 138
 InhibitorDecayRate
-0.7
+0.1
 1
 0
 Number
@@ -210,7 +229,7 @@ INPUTBOX
 662
 206
 ActivatorDiffusionRate
-0.01
+0.1
 1
 0
 Number
@@ -221,7 +240,7 @@ INPUTBOX
 825
 206
 InhibitorDiffusionRate
-0.2
+0.6
 1
 0
 Number
@@ -232,7 +251,7 @@ INPUTBOX
 663
 274
 ActivatorProduction
-50.0
+28.0
 1
 0
 Number
@@ -243,7 +262,28 @@ INPUTBOX
 827
 274
 InhibitorProduction
-20.0
+3.0
+1
+0
+Number
+
+CHOOSER
+690
+283
+828
+328
+Mode
+Mode
+"Homogenous" "OneDim" "TwoDim"
+2
+
+INPUTBOX
+835
+10
+990
+70
+Multact
+1.0
 1
 0
 Number
